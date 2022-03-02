@@ -2,7 +2,6 @@ import re
 import pathlib
 
 from collections import namedtuple
-from collections.abc import Iterable
 from dataclasses import dataclass
 
 subtpline_ptn = """
@@ -108,7 +107,7 @@ class SubtitleFile:
         elif hasattr(fd, "write"):
             openedbyus = False
         else:
-            raise RuntimeError("write() needs filename or file-like argument")
+            raise RuntimeError(f"write() needs filename or file-like argument. Got '{fd}'")
 
         try:
             self._write_to_open_file(fd)
