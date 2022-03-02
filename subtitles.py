@@ -42,7 +42,7 @@ class SubtitleRecord:
 
     def __str__(self):
         s = f"{tp_format(self.start)} --> {tp_format(self.end)}\n"
-        s += "\n".join(self.text) + "\n"
+        s += "\n".join(self.text or []) + "\n"
         return s
 
 
@@ -90,6 +90,9 @@ class SubtitleFile:
                     currentsub.add_line(line)
                 continue
 
+            if currentsub:
+                self.sublst.append(currentsub)
+
             ints = [ int(m.group(i)) for i in range(1, 9) ]
             start = Timepoint(*ints[:4])
             end = Timepoint(*ints[4:])
@@ -130,8 +133,17 @@ class SubtitleFile:
             def __next__(slf):
                 if slf.idx >= len(self.sublst):
                     raise StopIteration
-                substr = str(self.sublst[slf.idx])
+                substr = self.sublst[slf.idx]
                 slf.idx += 1
                 return substr
 
         return SubtitleIterator()
+
+    def remove_empty_subtitles(self):
+        newlist = []
+        for sub in self:
+            if sub.text:
+                newlist.append(sub)
+        self.sublst = newlist
+        return self
+
