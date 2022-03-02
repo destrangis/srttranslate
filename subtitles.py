@@ -53,7 +53,7 @@ class SubtitleFile:
 
     def read(self, fil):
         if isinstance(fil, str):
-            fpath = pathlib.Path(filename)
+            fpath = pathlib.Path(fil)
             fd = fpath.open()
             openedbyus = True
         else:
