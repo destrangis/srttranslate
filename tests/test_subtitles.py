@@ -172,6 +172,43 @@ class SubtitleTest(unittest.TestCase):
         for sub, exp in zip(sf, expected):
             self.assertEqual(str(sub), exp)
 
+    def test_count_chars_normal(self):
+        subfile = StringIO(dedent("""
+            1
+            00:00:00.500 --> 00:00:03.000
+            Start of a movie
+
+            2
+            00:01:12.629 --> 00:01:15.183
+            - Hello, Ms. Wilkins!
+            - Good morning!
+
+            3
+            00:01:17.321 --> 00:01:19.742
+            No, use the other door, please
+            """))
+        sf = SubtitleFile().read(subfile)
+        self.assertEqual(83, sf.count_content_chars())
+
+    def test_count_chars_empty_subfile(self):
+        sf = SubtitleFile()
+        self.assertEqual(0, sf.count_content_chars())
+
+    def test_count_chars_empty_subs(self):
+        subfile = StringIO(dedent("""
+             1
+             00:00:00.500 --> 00:00:03.000
+             00:01:12.629 --> 00:01:15.183
+             - Hello, Ms. Wilkins!
+             - Good morning!
+
+
+             00:01:17.321 --> 00:01:19.742
+             No, use the other door, please
+             """))
+        sf = SubtitleFile().read(subfile)
+        self.assertEqual(67, sf.count_content_chars())
+
 
 if __name__ == "__main__":
     unittest.main()

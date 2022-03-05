@@ -139,6 +139,7 @@ class SubtitleFile:
 
         return SubtitleIterator()
 
+
     def remove_empty_subtitles(self):
         newlist = []
         for sub in self:
@@ -147,3 +148,6 @@ class SubtitleFile:
         self.sublst = newlist
         return self
 
+
+    def count_content_chars(self):
+        return sum([len("\n".join(sub.text or "")) for sub in self])
