@@ -3,26 +3,25 @@ from subtitles import SubtitleFile, SubtitleRecord
 
 class TranslatorError(Exception):
     pass
-
-def dummy_translate(from_lang, to_lang, txt):
-    return f"({len(txt)} chars) {txt}"
+class OutOfQuotaError(TranslatorError):
+    pass
 
 
 class SrtTranslator:
 
-    def __init__(self, filename="", translatefn=dummy_translate, checkquotafn=lambda x:True):
-        self.translate = translatefn
-        self.check_quota = checkquotafn
+    def __init__(self, handler, filename=""):
         self.input = None
         self.input_language = ""
         self.output = {}
+        self.handler = handler
         if filename:
-            self.add_input_filename(filename)
+            self.add_input_file(filename)
         self.chars = 0
 
-    def add_input_filename(self, filename, language=""):
-        self.input = SubtitleFile().read(filename)
+    def add_input_file(self, file, language=""):
+        self.input = SubtitleFile().read(file)
         self.input_language = language
+        return self
 
     def add_input_srt(self, sf, language=""):
         if not isinstance(sf, SubtitleFile):
@@ -30,24 +29,31 @@ class SrtTranslator:
               f"argument of type SubtitleFile. Got {sf.__class__.__name__}")
         self.input = sf
         self.input_language = language
+        return self
 
-    def translate(self, to_lang="EN"):
+    def translate(self, to_lang="EN-GB"):
         if not self.input:
             raise TranslatorError("SrtTranslator.translate() called with no input file")
 
-        if not self.check_quota(self.input.count_content_chars()):
-            raise TranslatorError("Out of quota.")
+        chars_needed = self.input.count_content_chars()
+        if not self.handler.check_quota(chars_needed):
+            raise OutOfQuotaError("No quota."
+                        f"\n\tNeeded: {chars_needed}"
+                        f"\n\tAvaliable: {self.handler.limit - self.handler.chars}")
 
         result = self.output[to_lang] = SubtitleFile()
 
         for sub in self.input:
             txt = "\n".join(sub.text)
             self.chars += len(txt)
-            translated = self.translate(self.input_language, to_lang, txt)
+            translated = self.handler.translate(self.input_language, to_lang, txt)
             result.sublst.append(SubtitleRecord(sub.start, sub.end, translated.split("\n")))
+
+        return self
 
     def write(self, to_lang, file):
         output = self.output.get(to_lang)
         if not output:
             raise TranslatorError(f'SrtTranslator.write() No output for language "{to_lang}"')
         output.write(file)
+        return self
