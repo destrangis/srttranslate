@@ -52,7 +52,7 @@ class SubtitleFile:
         self.sublst = []
 
     def read(self, fil):
-        if isinstance(fil, str):
+        if isinstance(fil, str) or isinstance(fil, pathlib.Path):
             fpath = pathlib.Path(fil)
             fd = fpath.open()
             openedbyus = True
@@ -103,7 +103,7 @@ class SubtitleFile:
 
 
     def write(self, fd):
-        if isinstance(fd, str):
+        if isinstance(fd, str) or isinstance(fil, pathlib.Path):
             fpath = pathlib.Path(fd)
             fd = fpath.open("w")
             openedbyus = True
