@@ -9,11 +9,12 @@ from deeplhandler import DeeplHandler
 
 def translate_subtitles(subfile, outfile, api_key):
     print(f"Translating {subfile} into {outfile} using key {api_key}")
-    return 0
+    #return 0
+    breakpoint()
     handler = DeeplHandler(api_key)
     transl = SrtTranslator(handler).add_input_file(subfile)
     transl.translate("EN-GB")
-    transl.write(outfile)
+    transl.write("EN-GB", outfile)
 
 
 def get_api_key(cliopts):

@@ -10,7 +10,7 @@ subtpline_ptn = """
 (\d{2})   # start - minute
 :
 (\d{2})   # start - second
-\.
+\,
 (\d{3})   # start - millisec
 \s+
 -->
@@ -20,14 +20,14 @@ subtpline_ptn = """
 (\d{2})   # end - minute
 :
 (\d{2})   # end - second
-\.
+\,
 (\d{3})   # end - millisec
 """
 
 Timepoint = namedtuple("Timepoint", ["hour", "minute", "second", "millisecond"])
 
 def tp_format(tp: Timepoint) -> str:
-    return "{0:02}:{1:02}:{2:02}.{3:03}".format(*tp)
+    return "{0:02}:{1:02}:{2:02},{3:03}".format(*tp)
 
 @dataclass
 class SubtitleRecord:
@@ -71,7 +71,15 @@ class SubtitleFile:
         return self
 
 
+    @staticmethod
+    def check_bom(fd):
+        c = fd.read(1)
+        if c == '\ufeff':
+            return
+        fd.seek(0)
+
     def _read_from_iterable(self, fd):
+        self.check_bom(fd)
         currentsub = None
         for line in fd:
             line = line.strip()

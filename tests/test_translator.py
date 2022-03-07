@@ -31,24 +31,24 @@ class TestTranslator(unittest.TestCase):
     def test_translator_translates_from_file(self):
         subfile = StringIO(dedent("""
              1
-             00:00:00.500 --> 00:00:03.000
+             00:00:00,500 --> 00:00:03,000
              Start of a movie
 
              2
-             00:01:12.629 --> 00:01:15.183
+             00:01:12,629 --> 00:01:15,183
              - Hello, Ms. Wilkins!
              - Good morning!
 
              3
-             00:01:17.321 --> 00:01:19.742
+             00:01:17,321 --> 00:01:19,742
              No, use the other door, please
              """))
         expected = [
-            "00:00:00.500 --> 00:00:03.000\nFgneg bs n zbivr\n",
-            "00:01:12.629 --> 00:01:15.183\n"
+            "00:00:00,500 --> 00:00:03,000\nFgneg bs n zbivr\n",
+            "00:01:12,629 --> 00:01:15,183\n"
             "- Uryyb, Zf. Jvyxvaf!\n"
             "- Tbbq zbeavat!\n",
-            "00:01:17.321 --> 00:01:19.742\n"
+            "00:01:17,321 --> 00:01:19,742\n"
             "Ab, hfr gur bgure qbbe, cyrnfr\n",
             ]
 
@@ -63,24 +63,24 @@ class TestTranslator(unittest.TestCase):
     def test_translator_translates_from_srt_object(self):
         subfile = StringIO(dedent("""
              1
-             00:00:00.500 --> 00:00:03.000
+             00:00:00,500 --> 00:00:03,000
              Start of a movie
 
              2
-             00:01:12.629 --> 00:01:15.183
+             00:01:12,629 --> 00:01:15,183
              - Hello, Ms. Wilkins!
              - Good morning!
 
              3
-             00:01:17.321 --> 00:01:19.742
+             00:01:17,321 --> 00:01:19,742
              No, use the other door, please
              """))
         expected = [
-            "00:00:00.500 --> 00:00:03.000\nFgneg bs n zbivr\n",
-            "00:01:12.629 --> 00:01:15.183\n"
+            "00:00:00,500 --> 00:00:03,000\nFgneg bs n zbivr\n",
+            "00:01:12,629 --> 00:01:15,183\n"
             "- Uryyb, Zf. Jvyxvaf!\n"
             "- Tbbq zbeavat!\n",
-            "00:01:17.321 --> 00:01:19.742\n"
+            "00:01:17,321 --> 00:01:19,742\n"
             "Ab, hfr gur bgure qbbe, cyrnfr\n",
             ]
 
@@ -109,16 +109,16 @@ class TestTranslator(unittest.TestCase):
     def test_out_of_quota_raises_exception(self):
         subfile = StringIO(dedent("""
              1
-             00:00:00.500 --> 00:00:03.000
+             00:00:00,500 --> 00:00:03,000
              Start of a movie
 
              2
-             00:01:12.629 --> 00:01:15.183
+             00:01:12,629 --> 00:01:15,183
              - Hello, Ms. Wilkins!
              - Good morning!
 
              3
-             00:01:17.321 --> 00:01:19.742
+             00:01:17,321 --> 00:01:19,742
              No, use the other door, please
              """))
         trans = SrtTranslator(DummyHandler(in_quota=False, chars=240, limit=250))

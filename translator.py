@@ -9,11 +9,12 @@ class OutOfQuotaError(TranslatorError):
 
 class SrtTranslator:
 
-    def __init__(self, handler, filename=""):
+    def __init__(self, handler, filename="", progressfn=lambda:None):
         self.input = None
         self.input_language = ""
         self.output = {}
         self.handler = handler
+        self.progressfn = progressfn
         if filename:
             self.add_input_file(filename)
         self.chars = 0
@@ -43,7 +44,8 @@ class SrtTranslator:
 
         result = self.output[to_lang] = SubtitleFile()
 
-        for sub in self.input:
+        for i, sub in enumerate(self.input):
+            self.progressfn(i)
             txt = "\n".join(sub.text)
             self.chars += len(txt)
             translated = self.handler.translate(self.input_language, to_lang, txt)
