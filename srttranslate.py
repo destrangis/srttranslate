@@ -6,15 +6,20 @@ import argparse
 from translator import SrtTranslator, OutOfQuotaError, TranslatorError
 from deeplhandler import DeeplHandler
 
+def progress_report(maxchars, chars_to_now):
+    percent = chars_to_now * 100 / maxchars
+    print(f"\r{percent:5.1f}%", end="")
+
 
 def translate_subtitles(subfile, outfile, api_key):
-    print(f"Translating {subfile} into {outfile} using key {api_key}")
-    #return 0
-    breakpoint()
+    print(f"Translating {subfile} into {outfile}")
     handler = DeeplHandler(api_key)
-    transl = SrtTranslator(handler).add_input_file(subfile)
+    transl = SrtTranslator(handler, progressfn=progress_report)
+    transl.add_input_file(subfile)
     transl.translate("EN-GB")
+    print(f"\nWriting {outfile}")
     transl.write("EN-GB", outfile)
+    print("Done.")
 
 
 def get_api_key(cliopts):
