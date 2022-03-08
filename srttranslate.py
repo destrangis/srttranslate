@@ -14,12 +14,14 @@ def progress_report(maxchars, chars_to_now):
 def translate_subtitles(subfile, outfile, api_key):
     print(f"Translating {subfile} into {outfile}")
     handler = DeeplHandler(api_key)
+    print(f"{handler.chars} used of {handler.limit} available.")
     transl = SrtTranslator(handler, progressfn=progress_report)
     transl.add_input_file(subfile)
     transl.translate("EN-GB")
     print(f"\nWriting {outfile}")
     transl.write("EN-GB", outfile)
-    print("Done.")
+    print(f"Done. {transl.chars} Characters translated. "
+          f"Total {handler.chars+transl.chars} so far.")
 
 
 def get_api_key(cliopts):
