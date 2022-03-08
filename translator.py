@@ -20,7 +20,7 @@ class SrtTranslator:
         self.chars = 0
 
     def add_input_file(self, file, language=""):
-        self.input = SubtitleFile().read(file)
+        self.input = SubtitleFile().read(file).remove_empty_subtitles()
         self.input_language = language
         return self
 
