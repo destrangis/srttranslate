@@ -72,9 +72,6 @@ def main(argv=None):
         version = vfd.read().strip()
 
     cliopts = get_command_line_args(version, argv)
-    if cliopts.version:
-        print(__name__, sys.argv[0], version)
-        return 0
 
     api_key = get_api_key(cliopts)
     if not api_key:
