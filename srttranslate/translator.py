@@ -1,5 +1,5 @@
 
-from subtitles import SubtitleFile, SubtitleRecord
+from .subtitles import SubtitleFile, SubtitleRecord
 
 class TranslatorError(Exception):
     pass

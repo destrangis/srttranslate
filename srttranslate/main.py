@@ -3,8 +3,8 @@ import sys
 import pathlib
 import argparse
 
-from translator import SrtTranslator, OutOfQuotaError, TranslatorError
-from deeplhandler import DeeplHandler
+from .translator import SrtTranslator, OutOfQuotaError, TranslatorError
+from .deeplhandler import DeeplHandler
 
 def progress_report(maxchars, chars_to_now):
     percent = chars_to_now * 100 / maxchars

@@ -4,9 +4,8 @@ import unittest
 from io import StringIO
 from textwrap import dedent
 
-sys.path.append("..")
-from translator import SrtTranslator, TranslatorError, OutOfQuotaError
-from subtitles import SubtitleFile
+from srttranslate.translator import SrtTranslator, TranslatorError, OutOfQuotaError
+from srttranslate.subtitles import SubtitleFile
 
 class DummyHandler:
     # Handlers need:

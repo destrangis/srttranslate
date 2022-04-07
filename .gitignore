@@ -4,7 +4,10 @@ lib/
 lib64
 share/
 dist/
+.tox/
+*.egg-info/
 __pycache__/
+SW/
 *.srt
 pyvenv.cfg
 deepl.key

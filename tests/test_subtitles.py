@@ -2,9 +2,8 @@ import sys
 import unittest
 from io import StringIO
 from textwrap import dedent
-sys.path.append("..")
 
-from subtitles import SubtitleFile
+from srttranslate.subtitles import SubtitleFile
 
 class SubtitleTest(unittest.TestCase):
 
