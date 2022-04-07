@@ -2,6 +2,7 @@ import os
 import sys
 import pathlib
 import argparse
+import importlib.resources
 
 from .translator import SrtTranslator
 from .deeplhandler import DeeplHandler
@@ -35,21 +36,28 @@ def get_api_key(cliopts):
     return os.getenv("DEEPL_API_KEY", "")
 
 
-def get_command_line_args(argv):
+def get_command_line_args(version, argv):
     parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--version",
+        "-v",
+        action="version",
+        version="%(prog)s " + version,
+        help="print version and exit",
+    )
     parser.add_argument(
         "--keyfile",
         "-k",
         metavar="KEYFILE",
         type=pathlib.Path,
-        help="Name of file containing DeepL's API key",
+        help="name of file containing DeepL's API key",
     )
     parser.add_argument(
         "--output",
         "-o",
         metavar="FILE",
         type=pathlib.Path,
-        help="Name of output subtitle file",
+        help="name of output subtitle file",
     )
     parser.add_argument("SUBFILE", type=pathlib.Path, help="Subtitle file to translate")
     return parser.parse_args(argv)
@@ -59,7 +67,14 @@ def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
 
-    cliopts = get_command_line_args(argv)
+    pkgname = __name__.split(".")[0]
+    with importlib.resources.open_text(pkgname, "VERSION") as vfd:
+        version = vfd.read().strip()
+
+    cliopts = get_command_line_args(version, argv)
+    if cliopts.version:
+        print(__name__, sys.argv[0], version)
+        return 0
 
     api_key = get_api_key(cliopts)
     if not api_key:
