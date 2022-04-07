@@ -4,7 +4,7 @@ import pathlib
 from collections import namedtuple
 from dataclasses import dataclass
 
-subtpline_ptn = """
+subtpline_ptn = r"""
 (\d{2})   # start - hour
 :
 (\d{2})   # start - minute
@@ -26,8 +26,10 @@ subtpline_ptn = """
 
 Timepoint = namedtuple("Timepoint", ["hour", "minute", "second", "millisecond"])
 
+
 def tp_format(tp: Timepoint) -> str:
     return "{0:02}:{1:02}:{2:02},{3:03}".format(*tp)
+
 
 @dataclass
 class SubtitleRecord:
@@ -47,7 +49,6 @@ class SubtitleRecord:
 
 
 class SubtitleFile:
-
     def __init__(self):
         self.sublst = []
 
@@ -70,11 +71,10 @@ class SubtitleFile:
                 fd.close()
         return self
 
-
     @staticmethod
     def check_bom(fd):
         c = fd.read(1)
-        if c == '\ufeff':
+        if c == "\ufeff":
             return
         fd.seek(0)
 
@@ -101,14 +101,13 @@ class SubtitleFile:
             if currentsub:
                 self.sublst.append(currentsub)
 
-            ints = [ int(m.group(i)) for i in range(1, 9) ]
+            ints = [int(m.group(i)) for i in range(1, 9)]
             start = Timepoint(*ints[:4])
             end = Timepoint(*ints[4:])
             currentsub = SubtitleRecord(start, end)
 
         if currentsub:
             self.sublst.append(currentsub)
-
 
     def write(self, fd):
         if isinstance(fd, str) or isinstance(fd, pathlib.Path):
@@ -118,7 +117,9 @@ class SubtitleFile:
         elif hasattr(fd, "write"):
             openedbyus = False
         else:
-            raise RuntimeError(f"write() needs filename or file-like argument. Got '{fd}'")
+            raise RuntimeError(
+                f"write() needs filename or file-like argument. Got '{fd}'"
+            )
 
         try:
             self._write_to_open_file(fd)
@@ -131,9 +132,7 @@ class SubtitleFile:
         for i, sub in enumerate(self, 1):
             print(f"{i}\n{sub}", file=fd)
 
-
     def __iter__(self):
-
         class SubtitleIterator:
             def __init__(slf):
                 slf.idx = 0
@@ -147,7 +146,6 @@ class SubtitleFile:
 
         return SubtitleIterator()
 
-
     def remove_empty_subtitles(self):
         newlist = []
         for sub in self:
@@ -155,7 +153,6 @@ class SubtitleFile:
                 newlist.append(sub)
         self.sublst = newlist
         return self
-
 
     def count_content_chars(self):
         return sum([len("\n".join(sub.text or "")) for sub in self])

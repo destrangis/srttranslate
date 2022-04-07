@@ -1,11 +1,10 @@
 import deepl
 
 # with open("deepl.key") as fd:
-    # deepl_api_key = fd.read().strip()
+# deepl_api_key = fd.read().strip()
 
 
 class DeeplHandler:
-
     def __init__(self, deepl_api_key):
         self.transl = deepl.Translator(deepl_api_key)
         usage = self.transl.get_usage()
@@ -19,7 +18,9 @@ class DeeplHandler:
             outlang = "EN-GB"
 
         try:
-            rsp = self.transl.translate_text(txt, source_lang=inlang, target_lang=outlang)
+            rsp = self.transl.translate_text(
+                txt, source_lang=inlang, target_lang=outlang
+            )
         except Exception:
             raise
         else:
@@ -29,5 +30,3 @@ class DeeplHandler:
     def check_quota(self, nchars):
         # True-- we can translate nchars False-- we can't
         return (self.chars + nchars) <= self.limit
-
-

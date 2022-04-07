@@ -2,4 +2,5 @@ deepl
 black
 flake8
 tox
+pre-commit
 build

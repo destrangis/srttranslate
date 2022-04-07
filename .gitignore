@@ -11,3 +11,4 @@ SW/
 *.srt
 pyvenv.cfg
 deepl.key
+.python-version

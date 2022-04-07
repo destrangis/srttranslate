@@ -3,8 +3,9 @@ import sys
 import pathlib
 import argparse
 
-from .translator import SrtTranslator, OutOfQuotaError, TranslatorError
+from .translator import SrtTranslator
 from .deeplhandler import DeeplHandler
+
 
 def progress_report(maxchars, chars_to_now):
     percent = chars_to_now * 100 / maxchars
@@ -20,8 +21,10 @@ def translate_subtitles(subfile, outfile, api_key):
     transl.translate("EN-GB")
     print(f"\nWriting {outfile}")
     transl.write("EN-GB", outfile)
-    print(f"Done. {transl.chars} Characters translated. "
-          f"Total {handler.chars+transl.chars} so far.")
+    print(
+        f"Done. {transl.chars} Characters translated. "
+        f"Total {handler.chars+transl.chars} so far."
+    )
 
 
 def get_api_key(cliopts):
@@ -34,16 +37,23 @@ def get_api_key(cliopts):
 
 def get_command_line_args(argv):
     parser = argparse.ArgumentParser()
-    parser.add_argument("--keyfile", "-k", metavar="KEYFILE",
-            type=pathlib.Path,
-            help="Name of file containing DeepL's API key")
-    parser.add_argument("--output", "-o", metavar="FILE",
-            type=pathlib.Path,
-            help="Name of output subtitle file")
-    parser.add_argument("SUBFILE",
-            type=pathlib.Path,
-            help="Subtitle file to translate")
+    parser.add_argument(
+        "--keyfile",
+        "-k",
+        metavar="KEYFILE",
+        type=pathlib.Path,
+        help="Name of file containing DeepL's API key",
+    )
+    parser.add_argument(
+        "--output",
+        "-o",
+        metavar="FILE",
+        type=pathlib.Path,
+        help="Name of output subtitle file",
+    )
+    parser.add_argument("SUBFILE", type=pathlib.Path, help="Subtitle file to translate")
     return parser.parse_args(argv)
+
 
 def main(argv=None):
     if argv is None:
@@ -54,9 +64,11 @@ def main(argv=None):
     api_key = get_api_key(cliopts)
     if not api_key:
         print("No API key for DeepL", file=sys.stderr)
-        print("Please provide a file that contains the API Key or set "
-              "the DEEPL_API_KEY environment variable to the key",
-              file=sys.stderr)
+        print(
+            "Please provide a file that contains the API Key or set "
+            "the DEEPL_API_KEY environment variable to the key",
+            file=sys.stderr,
+        )
         return 1
 
     if cliopts.output:
