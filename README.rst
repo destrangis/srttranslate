@@ -4,9 +4,9 @@ srttranslate - Subtitle file translator
 
 Automatic translation of .srt subtitle files using the DeepL_ API.
 
-.. _DeepL: <https://www.deepl.com>
-.. _DeepL site: <https://www.deepl.com/pro-api?cta=header-pro-api/>
-.. _Pypi:  <https://pypi.org>
+.. _DeepL: https://www.deepl.com
+.. _DeepL site: https://www.deepl.com/pro-api?cta=header-pro-api/
+.. _Pypi:  https://pypi.org
 
 Installation
 ------------
